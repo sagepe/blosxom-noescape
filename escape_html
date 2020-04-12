@@ -1,0 +1,76 @@
+# Blosxom plugin: escape_html -*-cperl-*-
+# Author:         Sam Pearson <http://sgp.me.uk/sam/>
+# Version:        $Id: escape_html,v 1.2 2005/04/16 16:32:15 sam Exp sam $
+
+# For the rationale behind this plugin, see:
+# https://sgp.me.uk/sam/2005/04/16/auto-escaping-html
+
+package escape_html;
+
+# ----- Configuration -----
+
+# By default, this plugin will perform escaping when the flavour is 'rss'.
+
+# To disable escaping, set this to '0', to enable set to '1'.
+my $escape = '1';
+
+# Flavours to perform escaping on: defaults to 'rss'.
+# You can change the value and add more using the '|' character
+# as a separator, e.g.: $flavour = 'rss1|rss2';
+my $flavours = 'rss';
+
+sub start {
+  1;
+}
+
+sub story {
+  my ($pkg, $path, $filename, $story_ref, $title_ref, $body_ref) = @_;
+
+  if ( $escape and $blosxom::flavour =~ /$flavours/ ) {
+    my %escape = ('<'=>'&lt;', '>'=>'&gt;', '&'=>'&amp;', '"'=>'&quot;');
+    my $escape_re  = join '|' => keys %escape;
+    $$title_ref =~ s/($escape_re)/$escape{$1}/g;
+    $$body_ref =~ s/($escape_re)/$escape{$1}/g;
+  }
+
+1;
+
+}
+
+1;
+
+__END__
+
+=head1 NAME
+
+Blosxom plugin: escape_html
+
+=head1 DESCRIPTION
+
+This plugin allows you to control whether or not you escape HTML in the $body and $title of your posts.
+
+As distributed, blosxom will escape HTML in each post's $title and $body if it detects an XML content-type, so for this plugin to be useful you first have to disable this section of code, lines 378-384 in the original blosxom 2 script.  Simply commenting out these lines has the desired effect.
+
+By default, this plugin will escape the HTML when the flavour is 'rss'; this is to mirror the default behaviour of blosxom as closely as possible.  You can configure which flavours will trigger the escaping with the variable B<$escape_html::flavours> or disable escaping altogther with the variable B<$escape_html::escape>.
+
+=head1 AUTHOR
+
+Sam Pearson <http://sgp.me.uk/sam/>
+
+=head1 VERSION
+
+$Id: escape_html,v 1.2 2005/04/16 16:32:15 sam Exp sam $
+
+=head1 SEE ALSO
+
+https://sgp.me.uk/sam/2005/04/16/auto-escaping-html
+
+=head1 LICENSE
+
+As this plugin is essentially the escaping code from blosxom.cgi, it is available under the same terms:
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated docu mentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.

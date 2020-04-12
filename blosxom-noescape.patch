@@ -1,0 +1,23 @@
+--- blosxom-original/blosxom.cgi	2003-08-26 23:53:56.000000000 +0100
++++ blosxom-noescape/blosxom.cgi	2005-04-16 13:48:58.000000000 +0100
+@@ -375,13 +375,13 @@
+       # Plugins: Story
+       foreach my $plugin ( @plugins ) { $plugins{$plugin} > 0 and $plugin->can('story') and $entries = $plugin->story($path, $fn, \$story, \$title, \$body) }
+       
+-      if ($content_type =~ m{\Wxml$}) {
+-        # Escape <, >, and &, and to produce valid RSS
+-        my %escape = ('<'=>'&lt;', '>'=>'&gt;', '&'=>'&amp;', '"'=>'&quot;');  
+-        my $escape_re  = join '|' => keys %escape;
+-        $title =~ s/($escape_re)/$escape{$1}/g;
+-        $body =~ s/($escape_re)/$escape{$1}/g;
+-      }
++#       if ($content_type =~ m{\Wxml$}) {
++#         # Escape <, >, and &, and to produce valid RSS
++#         my %escape = ('<'=>'&lt;', '>'=>'&gt;', '&'=>'&amp;', '"'=>'&quot;');  
++#         my $escape_re  = join '|' => keys %escape;
++#         $title =~ s/($escape_re)/$escape{$1}/g;
++#         $body =~ s/($escape_re)/$escape{$1}/g;
++#       }
+   
+       $story = &$interpolate($story);
+     
